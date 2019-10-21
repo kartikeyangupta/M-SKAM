@@ -5,7 +5,7 @@
 # Created by: PyQt5 UI code generator 5.10.1
 #
 # WARNING! All changes made in this file will be lost!
-
+from PyQt5.QtWidgets import QTableWidget,QTableWidgetItem
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtCore import QTimer
 from PyQt5.QtWidgets import *
@@ -13,6 +13,67 @@ from PyQt5.QtGui import *
 from datetime import datetime
 import sys
 import csv
+rows = []
+class Result(QWidget):
+    Rows = []
+
+    def __init__(self , rows ,sdate ,edate):
+        super().__init__()
+        self.title = 'PyQt5 table - pythonspot.com'
+        self.left = 0
+        self.top = 0
+        self.width = 450
+        self.height = 1000
+        self.Rows = rows
+        self.initUI(sdate,edate)
+
+    def initUI(self,sdate,edate):
+        self.setWindowTitle(self.title)
+        self.setGeometry(self.left, self.top, self.width, self.height)
+
+        self.createTable(sdate,edate)
+
+        # Add box layout, add table to box layout and add box layout to widget
+        self.layout = QVBoxLayout()
+        self.layout.addWidget(self.tableWidget)
+        self.setLayout(self.layout)
+
+        # Show widget
+        self.show()
+
+    def createTable(self,sdate,edate):
+       # Create table
+        self.tableWidget = QTableWidget()
+        x = 0
+        for row in self.Rows:
+            getDat = row[0]
+            gdate = datetime.strptime(getDat,'%m-%d-%Y').date()
+            if gdate>=sdate and gdate<=edate:
+                x = x + 1
+        self.tableWidget.setRowCount(x)
+        self.tableWidget.setColumnCount(3)
+        # self.tableWidget.setItem(0,0, QTableWidgetItem("Cell (1,1)"))
+        self.tableWidget.setItem(0,0, QTableWidgetItem("Date"))
+        self.tableWidget.setItem(0,1, QTableWidgetItem("Item"))
+        self.tableWidget.setItem(0,2, QTableWidgetItem("Qauntity"))
+        x = 1
+        for row in self.Rows:
+            getDat = row[0]
+            gdate = datetime.strptime(getDat,'%m-%d-%Y').date()
+            if gdate>=sdate and gdate<=edate:
+                self.tableWidget.setItem(x,0, QTableWidgetItem(row[0]))
+                self.tableWidget.setItem(x,1, QTableWidgetItem(row[1]))
+                self.tableWidget.setItem(x,2, QTableWidgetItem(row[2]))
+                print(row)
+                x = x + 1
+        self.tableWidget.move(0,0)
+
+        # table selection change
+        #self.tableWidget.doubleClicked.connect(self.on_click)
+
+
+
+
 class Ui_MainWindow(QWidget):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
@@ -48,7 +109,11 @@ class Ui_MainWindow(QWidget):
         self.statusbar = QtWidgets.QStatusBar(MainWindow)
         self.statusbar.setObjectName("statusbar")
         MainWindow.setStatusBar(self.statusbar)
+        self.tableWidget = QTableWidget()
+        # set row count
 
+        # set column count
+        self.tableWidget.setColumnCount(3)
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
     def openFileNameDialog(self):
@@ -64,8 +129,8 @@ class Ui_MainWindow(QWidget):
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
-        self.label1.setText(_translate("MainWindow", "TextLabel"))
-        self.label2.setText(_translate("MainWindow", "TextLabel"))
+        self.label1.setText(_translate("MainWindow", "Start Date"))
+        self.label2.setText(_translate("MainWindow", "End Date"))
         self.uploadButton.setText(_translate("MainWindow", "Upload Prediction FIle"))
     def showDate1(self, date):
         self.label1.setText(date.toString())
@@ -74,7 +139,7 @@ class Ui_MainWindow(QWidget):
     def readData(self,filename1):
         filename  = filename1
         fields = []
-        rows = []
+
         startDate = self.Cal1.selectedDate().toString("MM-dd-yyyy")
         endDate = self.Cal2.selectedDate().toString("MM-dd-yyyy")
         sdate = datetime.strptime(startDate,"%m-%d-%Y").date()
@@ -87,13 +152,21 @@ class Ui_MainWindow(QWidget):
             for row in csvreader:
                 rows.append(row)
         sum = 0
-        for row in rows:
-            getDat = row[0]
-            gdate = datetime.strptime(getDat,'%m-%d-%Y').date()
-            if gdate>=sdate and gdate<=edate:
-                print(row)
-        self.close()
-        exit()
+        #self.tableWidget.setRowCount(len(rows))
+        x = 0
+        self.w = Result(rows , sdate , edate)
+        self.w.show()
+        self.hide()
+        # for row in rows:
+        #     getDat = row[0]
+        #     gdate = datetime.strptime(getDat,'%m-%d-%Y').date()
+        #     if gdate>=sdate and gdate<=edate:
+        #         # self.tableWidget.setItem(x,0, QTableWidgetItem(row[0]))
+        #         # self.tableWidget.setItem(x,1, QTableWidgetItem(row[1]))
+        #         # self.tableWidget.setItem(x,2, QTableWidgetItem(row[2]))
+        #         print(row)
+
+
 if __name__ == "__main__":
     import sys
     app = QtWidgets.QApplication(sys.argv)
