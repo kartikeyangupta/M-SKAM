@@ -67,6 +67,18 @@
      <height>30</height>
     </rect>
    </property>
+   <widget class="QMenu" name="menuMin">
+    <property name="title">
+     <string>Main</string>
+    </property>
+   </widget>
+   <widget class="QMenu" name="menuBilling">
+    <property name="title">
+     <string>Billing</string>
+    </property>
+   </widget>
+   <addaction name="menuMin"/>
+   <addaction name="menuBilling"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
  </widget>

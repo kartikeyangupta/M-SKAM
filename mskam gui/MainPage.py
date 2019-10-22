@@ -157,14 +157,7 @@ class Ui_MainWindow(QWidget):
         self.w = Result(rows , sdate , edate)
         self.w.show()
         self.hide()
-        # for row in rows:
-        #     getDat = row[0]
-        #     gdate = datetime.strptime(getDat,'%m-%d-%Y').date()
-        #     if gdate>=sdate and gdate<=edate:
-        #         # self.tableWidget.setItem(x,0, QTableWidgetItem(row[0]))
-        #         # self.tableWidget.setItem(x,1, QTableWidgetItem(row[1]))
-        #         # self.tableWidget.setItem(x,2, QTableWidgetItem(row[2]))
-        #         print(row)
+        
 
 
 if __name__ == "__main__":
